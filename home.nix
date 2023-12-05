@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs,  ... }:
 
 {
   home = {
@@ -10,11 +10,11 @@
       enable = true;
     };
     git = {
-	userName = "Klaus Fyhn Jacobsen";
-	userEmail = "klausfyhn@gmail.com";
-	extraConfig = {
-	  
-	};
+      userName = "Klaus Fyhn Jacobsen";
+      userEmail = "klausfyhn@gmail.com";
+    };
+    bat = {
+     enable = true;
     };
   };
 }

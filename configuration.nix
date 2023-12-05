@@ -2,19 +2,16 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   nix = {
     package = pkgs.nix;
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-    };
+    settings = { experimental-features = [ "nix-command" "flakes" ]; };
   };
 
   # Bootloader.
@@ -64,15 +61,11 @@
     enable = true;
     layout = "us";
     xkbVariant = "";
-    displayManager = {
-      lightdm = {
-        enable = true;
-      };
-    };
+    displayManager = { lightdm = { enable = true; }; };
     windowManager = {
       xmonad = {
         enable = true;
-	enableContribAndExtras = true;
+        enableContribAndExtras = true;
       };
     };
   };
@@ -82,7 +75,26 @@
     isNormalUser = true;
     description = "Klaus Fyhn Jacobsen";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [
+      ## doom dependencies
+      git
+      (ripgrep.override { withPCRE2 = true; })
+      gnutls
+      ## doom optionsal dependencies
+      fd
+      imagemagick
+      pandoc
+      ## doom languages
+      ### nix
+      nixfmt
+      ### shell
+      shfmt
+      shellcheck
+      ### haskell
+      haskell-language-server
+      haskellPackages.hoogle
+      haskellPackages.cabal-install
+    ];
   };
 
   # Allow unfree packages
@@ -90,10 +102,7 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  ];
+  environment.systemPackages = with pkgs; [ alacritty rofi dunst ];
 
   programs = {
     firefox.enable = true;
@@ -101,12 +110,7 @@
     git.enable = true;
   };
 
-  services = {
-    emacs = {
-      enable = true;
-      package = pkgs.emacs;
-    };
-  };
+  services = { emacs = { enable = true; }; };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
